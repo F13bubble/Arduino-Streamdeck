@@ -13,6 +13,9 @@ Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 int colorIndex = 0;
 bool lastButtonState = LOW;
+int rainbowHue = 0;
+unsigned long lastRainbowUpdate = 0;
+unsigned long rainbowDelay = 100; // time between each step
 
 uint8_t actions[NUM_BUTTONS];
 
@@ -108,21 +111,21 @@ void performAction(uint8_t actionID) {
       delay(100);
       Keyboard.releaseAll();
       break;
-    case 12: // Play/Pause
-      Keyboard.press(KEY_MEDIA_PLAY_PAUSE);
-      delay(100);
-      Keyboard.release(KEY_MEDIA_PLAY_PAUSE);
-      break;
-    case 13: // next track
-      Keyboard.press(KEY_MEDIA_NEXT_TRACK);
-      delay(100);
-      Keyboard.release(KEY_MEDIA_NEXT_TRACK);
-      break;
-    case 14: // previous track
-      Keyboard.press(KEY_MEDIA_PREVIOUS_TRACK);
-      delay(100);
-      Keyboard.release(KEY_MEDIA_PREVIOUS_TRACK);
-      break;
+    // case 12: // Play/Pause
+    //   Keyboard.press(KEY_MEDIA_PLAY_PAUSE);
+    //   delay(100);
+    //   Keyboard.release(KEY_MEDIA_PLAY_PAUSE);
+    //   break;
+    // case 13: // next track
+    //   Keyboard.press(KEY_MEDIA_NEXT_TRACK);
+    //   delay(100);
+    //   Keyboard.release(KEY_MEDIA_NEXT_TRACK);
+    //   break;
+    // case 14: // previous track
+    //   Keyboard.press(KEY_MEDIA_PREVIOUS_TRACK);
+    //   delay(100);
+    //   Keyboard.release(KEY_MEDIA_PREVIOUS_TRACK);
+    //   break;
     case 15: // PowerToys color picker
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press(KEY_LEFT_SHIFT);
@@ -160,11 +163,11 @@ void performAction(uint8_t actionID) {
       Keyboard.print("git pull");
       Keyboard.write(KEY_RETURN);
       break;
-    case 21: // Mute
-      Keyboard.press(KEY_MEDIA_MUTE);
-      delay(100);
-      Keyboard.release(KEY_MEDIA_MUTE);
-      break;
+    // case 21: // Mute
+    //   Keyboard.press(KEY_MEDIA_MUTE);
+    //   delay(100);
+    //   Keyboard.release(KEY_MEDIA_MUTE);
+    //   break;
     default:
       if (actionID >= 100) {
         Keyboard.write((char)(actionID - 100));
@@ -191,7 +194,7 @@ void loop() {
     if (isPressed && !pressed[i]) {
       if (i == 10){
         colorIndex++;
-        if (colorIndex > 6) colorIndex = 0;
+        if (colorIndex > 11) colorIndex = 0;
         setColor(colorIndex);
       }
       else {
@@ -219,10 +222,54 @@ void loop() {
       }
     }
   }
+  if (colorIndex == 10) {
+    rainbowFadeStep();
+  }
 }
+void rainbowGradient(uint32_t colorStart, uint32_t colorEnd) {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    float t = (float)i / (NUM_LEDS - 1); // value from 0.0 to 1.0
+
+    // Split the start and end colors into RGB
+    byte r1 = (colorStart >> 16) & 0xFF;
+    byte g1 = (colorStart >> 8) & 0xFF;
+    byte b1 = colorStart & 0xFF;
+
+    byte r2 = (colorEnd >> 16) & 0xFF;
+    byte g2 = (colorEnd >> 8) & 0xFF;
+    byte b2 = colorEnd & 0xFF;
+
+    // Interpolate
+    byte r = r1 + (r2 - r1) * t;
+    byte g = g1 + (g2 - g1) * t;
+    byte b = b1 + (b2 - b1) * t;
+
+    strip.setPixelColor(i, strip.Color(r, g, b));
+  }
+  strip.show();
+}
+void rainbowFadeStep() {
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - lastRainbowUpdate >= rainbowDelay) {
+    lastRainbowUpdate = currentMillis;
+
+    uint32_t color = strip.ColorHSV(rainbowHue, 255, 255);
+
+    for (int i = 0; i < NUM_LEDS; i++) {
+      strip.setPixelColor(i, color);
+    }
+    strip.show();
+
+    rainbowHue += 256;
+    if (rainbowHue > 65535) rainbowHue = 0;
+  }
+}
+
 
 void setColor(int index) {
   uint32_t color;
+  bool multi = false;
 
   switch (index) {
     case 0: color = strip.Color(255, 0, 0); break;    // red
@@ -230,12 +277,20 @@ void setColor(int index) {
     case 2: color = strip.Color(0, 0, 255); break;    // blue
     case 3: color = strip.Color(255, 255, 0); break;  // yellow
     case 4: color = strip.Color(255, 0, 255); break;  // pink
-    case 5: color = strip.Color(255, 255, 255); break;  // White
-    case 6: color = strip.Color(0, 0, 0); break;  // off
+    case 5: color = strip.Color(0, 255, 255); break;  // cyan
+    case 6: color = strip.Color(255, 255, 255); break;  // White
+    case 7: rainbowGradient(strip.Color(255, 0, 0), strip.Color(0, 0, 255)); multi = true; break; // red → blue
+    case 8: rainbowGradient(strip.Color(0, 255, 0), strip.Color(0, 0, 255)); multi = true; break; // green → blue
+    case 9: rainbowGradient(strip.Color(255, 255, 0), strip.Color(255, 0, 0)); multi = true; break; // yellow → red
+    case 10: rainbowFadeStep(); multi = true; break;
+    case 11: color = strip.Color(0, 0, 0); break;  // off
   }
-
-  for (int i = 0; i < NUM_LEDS; i++) {
-    strip.setPixelColor(i, color);
+  
+  if (multi == false){
+    for (int i = 0; i < NUM_LEDS; i++) {
+      strip.setPixelColor(i, color);
+    }
   }
+  
   strip.show();
 }
