@@ -37,30 +37,23 @@ ACTIONS = {
     "Custom Key: Enter": 100 + 13,
 }
 
-def test(i):
-    val = dropdowns[i].get()
-    print(val)
-    if val != "":
-        print("Test passed")
-    else:
-        print("Test failed")
 
-# === JSON laden ===
+# === load JSON ===
 def load_config():
     if os.path.exists(dir_path + CONFIG_FILE):
         try:
             with open(dir_path + CONFIG_FILE, 'r') as f:
                 return json.load(f)
         except Exception as e:
-            print("Fehler beim Laden der JSON:", e)
+            print("Failed to load json:", e)
     return {}
 
-# === JSON speichern ===
+# === save JSON ===
 def save_config(config):
     with open(dir_path + CONFIG_FILE, 'w') as f:
         json.dump(config, f, indent=4)
 
-# === Mapping senden ===
+# === send mapping ===
 def send_mapping():
     config = {}
     try:
@@ -69,7 +62,7 @@ def send_mapping():
             action_label = dropdown_vars[i].get()
             action_id = ACTIONS.get(action_label)
             if action_id is None:
-                print(f"⚠️ Ungültige Aktion für Taste {i}: {action_label}")
+                print(f"⚠️ Invalid action for key {i}: {action_label}")
                 continue
             command = f"{i}:{action_id}\n"
             ser.write(command.encode())
@@ -77,13 +70,13 @@ def send_mapping():
             config[str(i)] = action_label
         ser.close()
         save_config(config)
-        print("✅ Konfiguration gespeichert.")
+        print("✅ Configuration saved.")
     except Exception as e:
-        print("❌ Fehler beim Senden:", e)
+        print("❌ Error sending:", e)
 
 # === GUI ===
 root = tk.Tk()
-root.title("Streamdeck Belegung")
+root.title("Streamdeck - Key assignment")
 root.geometry("600x600")
 
 dropdowns = []
@@ -93,7 +86,7 @@ config_data = load_config()
 for i in range(12):
     frame = ttk.Frame(root)
     frame.pack(pady=5)
-    ttk.Label(frame, text=f"Taste {i}").pack(side='left', padx=5)
+    ttk.Label(frame, text=f"Key {i}").pack(side='left', padx=5)
 
     var = tk.StringVar()
     dropdown_vars.append(var)
@@ -110,7 +103,5 @@ for i in range(12):
     combo.pack(side='left')
     dropdowns.append(combo)
 
-    test(i)
-
-ttk.Button(root, text="Senden", command=send_mapping).pack(pady=10)
+ttk.Button(root, text="Send", command=send_mapping).pack(pady=10)
 root.mainloop()
