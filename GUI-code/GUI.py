@@ -66,7 +66,7 @@ def send_mapping():
     try:
         ser = serial.Serial(PORT, BAUD, timeout=1)
         for i in range(12):
-            action_label = dropdown_vars[i].get()  # 👈 nutze var.get() statt combo.get()
+            action_label = dropdown_vars[i].get()
             action_id = ACTIONS.get(action_label)
             if action_id is None:
                 print(f"⚠️ Ungültige Aktion für Taste {i}: {action_label}")
@@ -87,7 +87,7 @@ root.title("Streamdeck Belegung")
 root.geometry("600x600")
 
 dropdowns = []
-dropdown_vars = []  # 👈 Liste für individuelle StringVars
+dropdown_vars = []
 config_data = load_config()
 
 for i in range(12):
@@ -96,16 +96,16 @@ for i in range(12):
     ttk.Label(frame, text=f"Taste {i}").pack(side='left', padx=5)
 
     var = tk.StringVar()
-    dropdown_vars.append(var)  # ✅ speichern
+    dropdown_vars.append(var)
     
     combo = ttk.Combobox(frame, textvariable=var)
     combo['values'] = list(ACTIONS.keys())
 
-    saved_value = config_data.get(str(i))  # 🔍 kein Default!
+    saved_value = config_data.get(str(i))
     if saved_value in ACTIONS:
         var.set(saved_value)
     else:
-        var.set("")  # 👈 Feld bleibt leer, wenn nichts oder ungültig
+        var.set("")
 
     combo.pack(side='left')
     dropdowns.append(combo)
