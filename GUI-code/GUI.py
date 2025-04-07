@@ -10,6 +10,7 @@ PORT = 'COM3'
 BAUD = 9600
 CONFIG_FILE = "\\streamdeck_config.json"
 
+
 ACTIONS = {
     "Copy (Ctrl+C)": 1,
     "Paste (Ctrl+V)": 2,
@@ -37,6 +38,13 @@ ACTIONS = {
     "Custom Key: Enter": 100 + 13,
 }
 
+# === init serial ===
+ser = serial.Serial(PORT, BAUD, timeout=1)
+def init():
+    global status_val    
+    if ser.is_open == True:
+        status_val.set(f"connected to {ser.port}")
+
 
 # === load JSON ===
 def load_config():
@@ -57,7 +65,6 @@ def save_config(config):
 def send_mapping():
     config = {}
     try:
-        ser = serial.Serial(PORT, BAUD, timeout=1)
         for i in range(12):
             action_label = dropdown_vars[i].get()
             action_id = ACTIONS.get(action_label)
@@ -71,8 +78,11 @@ def send_mapping():
         ser.close()
         save_config(config)
         print("✅ Configuration saved.")
+        status_val.set("✅ Configuration saved.")
     except Exception as e:
         print("❌ Error sending:", e)
+        status_val.set("❌ Error sending:", e)
+
 
 # === GUI ===
 root = tk.Tk()
@@ -102,6 +112,8 @@ for i in range(12):
 
     combo.pack(side='left')
     dropdowns.append(combo)
-
+status_val = tk.StringVar()
+init()
+status_label = tk.Label(root, text="connecting...", textvariable=status_val).pack()
 ttk.Button(root, text="Send", command=send_mapping).pack(pady=10)
 root.mainloop()
