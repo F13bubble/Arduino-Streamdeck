@@ -194,7 +194,7 @@ void loop() {
     if (isPressed && !pressed[i]) {
       if (i == 10){
         colorIndex++;
-        if (colorIndex > 11) colorIndex = 0;
+        if (colorIndex > 13) colorIndex = 0;
         setColor(colorIndex);
       }
       else {
@@ -222,7 +222,7 @@ void loop() {
       }
     }
   }
-  if (colorIndex == 10) {
+  if (colorIndex == 12) {
     rainbowFadeStep();
   }
 }
@@ -278,12 +278,14 @@ void setColor(int index) {
     case 3: color = strip.Color(255, 255, 0); break;  // yellow
     case 4: color = strip.Color(255, 0, 255); break;  // pink
     case 5: color = strip.Color(0, 255, 255); break;  // cyan
-    case 6: color = strip.Color(255, 255, 255); break;  // White
-    case 7: rainbowGradient(strip.Color(255, 0, 0), strip.Color(0, 0, 255)); multi = true; break; // red → blue
-    case 8: rainbowGradient(strip.Color(0, 255, 0), strip.Color(0, 0, 255)); multi = true; break; // green → blue
-    case 9: rainbowGradient(strip.Color(255, 255, 0), strip.Color(255, 0, 0)); multi = true; break; // yellow → red
-    case 10: rainbowFadeStep(); multi = true; break;
-    case 11: color = strip.Color(0, 0, 0); break;  // off
+    case 6: color = strip.Color(0, 140, 135); break;  // cyan dark
+    case 7: color = strip.Color(255, 255, 255); break;  // White
+    case 8: rainbowGradient(strip.Color(255, 0, 0), strip.Color(0, 0, 255)); multi = true; break; // red → blue
+    case 9: rainbowGradient(strip.Color(0, 255, 0), strip.Color(0, 0, 255)); multi = true; break; // green → blue
+    case 10: rainbowGradient(strip.Color(255, 255, 0), strip.Color(255, 0, 0)); multi = true; break; // yellow → red
+    case 11: rainbowGradient(strip.Color(0, 255, 0), strip.Color(255, 0, 0)); multi = true; break; // green → red
+    case 12: rainbowFadeStep(); multi = true; break;
+    case 13: color = strip.Color(0, 0, 0); break;  // off
   }
   
   if (multi == false){
