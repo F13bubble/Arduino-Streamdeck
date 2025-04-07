@@ -1,5 +1,6 @@
-
-(Picture follows)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5ebfb781-1bff-4225-bed2-81b0f29f62f2" alt="Arduino-Streamdeck_pic1" width="500"/>
+</p>
 
 # Arduino-Streamdeck - What is even that?
 Together with a buddy, I built this streamdeck. The functions of the buttons were all hard-coded back then - and it worked great!
