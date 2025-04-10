@@ -20,4 +20,8 @@ My idea: The user should be able to easily customize the button assignments via 
 
 ### Circuit diagram
 ![Untitled Sketch 2_Steckplatine](https://github.com/user-attachments/assets/abe124eb-8918-41ba-aacf-c531ada75a4c)
+
+### Case
+The design of the case is completely up to you :)
+BUT I recommend a white filament for the backplate of the buttons to let the light through (if you want it glowing). 
 </details>
