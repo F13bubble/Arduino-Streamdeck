@@ -14,8 +14,8 @@ My idea: The user should be able to easily customize the button assignments via 
   
 ### Used Parts
 - Arduino Pro Micro (5V)
-- 12 Switches/buttons
-- led strip as backlight (optional)
+- 12 Switches/buttons (I used "CS Matcha Green Switch" from AKKO)
+- (optional) led strip as backlight (cut to 3 leds)
 
 
 ### Circuit diagram
