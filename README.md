@@ -11,7 +11,11 @@ My idea: The user should be able to easily customize the button assignments via 
 
 <details>
   <summary>But first a short overfiew of the streamdeck itself:</summary>
-  
+
+  ### <strong> (You can the full instruction on [Instructables](https://www.instructables.com/HyperDeck-an-Arduino-Streamdeck/)) </strong>
+
+
+
 ### Used Parts
 - Arduino Pro Micro (5V)
 - 12 Switches/buttons (I used "CS Matcha Green Switch" from AKKO)
