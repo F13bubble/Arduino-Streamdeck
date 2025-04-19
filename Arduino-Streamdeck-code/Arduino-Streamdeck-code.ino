@@ -205,6 +205,62 @@ void performAction(uint8_t actionID) {
       Keyboard.press(KEY_RETURN);
       Keyboard.release(KEY_RETURN);
       break;
+    case 26: // Clipboard
+      Keyboard.press(KEY_LEFT_GUI);
+      Keyboard.press('v');
+      delay(100);
+      Keyboard.releaseAll();
+      break;
+    case 27: // Undo
+      Keyboard.press(KEY_LEFT_CTRL);
+      Keyboard.press('z');
+      delay(100);
+      Keyboard.releaseAll();
+      break;
+    case 28: // redo
+      Keyboard.press(KEY_LEFT_CTRL);
+      Keyboard.press('y');
+      delay(100);
+      Keyboard.releaseAll();
+      break;
+    case 29: // Windows Notifications
+      Keyboard.press(KEY_LEFT_GUI);
+      Keyboard.press('n');
+      delay(100);
+      Keyboard.releaseAll();
+      break;
+    case 30: // Windows Settings
+      Keyboard.press(KEY_LEFT_GUI);
+      Keyboard.press('i');
+      delay(100);
+      Keyboard.releaseAll();
+      break;
+    case 31: // Window manager
+      Keyboard.press(KEY_LEFT_GUI);
+      Keyboard.press(KEY_TAB);
+      delay(100);
+      Keyboard.releaseAll();
+      break;
+    case 32: // Change Window
+      Keyboard.press(KEY_LEFT_ALT);
+      Keyboard.press(KEY_TAB);
+      delay(100);
+      Keyboard.releaseAll();
+      break;
+    case 33: // Reload Graphics Driver
+      Keyboard.press(KEY_LEFT_GUI);
+      Keyboard.press(KEY_LEFT_CTRL);
+      Keyboard.press(KEY_LEFT_SHIFT);
+      Keyboard.press('b');
+      delay(100);
+      Keyboard.releaseAll();
+      break;
+    case 34: // ALT + F4
+      Keyboard.press(KEY_LEFT_ALT);
+      Keyboard.press(KEY_F4);
+      delay(100);
+      Keyboard.releaseAll();
+      break;
     default:
       if (actionID >= 100) {
         Keyboard.write((char)(actionID - 100));
@@ -254,6 +310,12 @@ void loop() {
   // Mapping via Serial: "5:2\n" means key 5 -> action 2 (paste)
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
+    // Serial.println("input");
+    if (input == "?"){
+      Serial.println("STREAMDECK_OK");
+      return;
+    }
+    
     int sep = input.indexOf(':');
     if (sep > 0 && sep < input.length() - 1) {
       int btn = input.substring(0, sep).toInt();
