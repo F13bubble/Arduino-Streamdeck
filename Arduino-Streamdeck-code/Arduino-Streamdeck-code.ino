@@ -310,12 +310,6 @@ void loop() {
   // Mapping via Serial: "5:2\n" means key 5 -> action 2 (paste)
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
-    // Serial.println("input");
-    if (input == "?"){
-      Serial.println("STREAMDECK_OK");
-      return;
-    }
-    
     int sep = input.indexOf(':');
     if (sep > 0 && sep < input.length() - 1) {
       int btn = input.substring(0, sep).toInt();
