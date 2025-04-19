@@ -38,7 +38,7 @@ BUT I recommend a white filament for the backplate of the buttons to let the lig
 The whole application is written in C#
 fun-fact: This is my first application completely written in C# :)
 
-### So, how the duck do you use it???
+### So, how the 🦆 do you use it???
 
 When you start the application, the COM-port will probably be the wrong one. (For non-IT folks: a COM-port is like an old-fashioned plug on your computer that lets it talk to other devices. You find out, what the right port is by using the device manager)
 
