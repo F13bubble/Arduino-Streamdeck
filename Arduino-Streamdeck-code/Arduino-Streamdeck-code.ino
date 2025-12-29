@@ -1,4 +1,6 @@
-#include <Keyboard.h>
+#include <HID-Project.h>
+#include <HID-Settings.h>
+
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -107,25 +109,19 @@ void performAction(uint8_t actionID) {
       break;
     case 11: // Screenshot
       Keyboard.press(KEY_LEFT_GUI);
-      Keyboard.press(KEY_PRINT_SCREEN);
+      Keyboard.press(KEY_PRINTSCREEN);
       delay(100);
       Keyboard.releaseAll();
       break;
-    // case 12: // Play/Pause
-    //   Keyboard.press(KEY_MEDIA_PLAY_PAUSE);
-    //   delay(100);
-    //   Keyboard.release(KEY_MEDIA_PLAY_PAUSE);
-    //   break;
-    // case 13: // next track
-    //   Keyboard.press(KEY_MEDIA_NEXT_TRACK);
-    //   delay(100);
-    //   Keyboard.release(KEY_MEDIA_NEXT_TRACK);
-    //   break;
-    // case 14: // previous track
-    //   Keyboard.press(KEY_MEDIA_PREVIOUS_TRACK);
-    //   delay(100);
-    //   Keyboard.release(KEY_MEDIA_PREVIOUS_TRACK);
-    //   break;
+    case 12: // Play/Pause
+      Consumer.write(MEDIA_PLAY_PAUSE);
+      break;
+    case 13: // next track
+      Consumer.write(MEDIA_NEXT);
+      break;
+    case 14: // previous track
+      Consumer.write(MEDIA_PREVIOUS);
+      break;
     case 15: // PowerToys color picker
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press(KEY_LEFT_SHIFT);
@@ -163,11 +159,9 @@ void performAction(uint8_t actionID) {
       Keyboard.print("git pull");
       Keyboard.write(KEY_RETURN);
       break;
-    // case 21: // Mute
-    //   Keyboard.press(KEY_MEDIA_MUTE);
-    //   delay(100);
-    //   Keyboard.release(KEY_MEDIA_MUTE);
-    //   break;
+    case 21: // Mute
+      Consumer.write(MEDIA_VOLUME_MUTE);
+      break;
     case 22: // screenshot select
       Keyboard.press(KEY_LEFT_GUI);
       Keyboard.press(KEY_LEFT_SHIFT);
@@ -270,6 +264,7 @@ void performAction(uint8_t actionID) {
 
 void setup() {
   Keyboard.begin();
+  Consumer.begin();
   strip.begin();
   strip.show(); // all leds off
   for (int i = 0; i < NUM_BUTTONS; i++) {
